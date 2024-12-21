@@ -1,19 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
+﻿using Newtonsoft.Json;
 
 namespace Chatbot.Models
 {
     internal class StockExchange
     {
-        [JsonPropertyName("code")]
+        [JsonProperty("code")]
         public required string Code;
-        [JsonPropertyName("stockExchange")]
+        [JsonProperty("stockExchange")]
         public required string Name;
-        [JsonPropertyName("topStocks")]
+        [JsonProperty("topStocks")]
         public required Stock[] TopStocks;
     }
 }

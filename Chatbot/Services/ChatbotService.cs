@@ -18,6 +18,8 @@ namespace Chatbot.Services
             StockList,
             StockDetail
         }
+
+        private bool _success = false;
         private Menu _currentMenu = Menu.Main;
         private string _currentExchangeCode = string.Empty;
         private string _currentStockCode = string.Empty;
@@ -40,24 +42,17 @@ namespace Chatbot.Services
                         PrintStockDetail();
                         PrintMenu();
                         break;
-                    default:
-                        Console.WriteLine("N/A");
-                        break;
                 }
 
                 Console.WriteLine();
 
                 _input = Console.ReadLine()?.ToLower();
 
-                if(_input == "back") {
+                if(_input == "back" && _currentMenu > 0) {
                     _currentMenu--;
                 } else if (_input == "main") { 
                     _currentMenu = Menu.Main;
-                } else if (_input == string.Empty)
-                {
-                }
-                else
-                {
+                } else if (_success) {
                     _currentMenu++;
                 }
             }
@@ -67,8 +62,8 @@ namespace Chatbot.Services
 
         private void PrintMenu()
         {
-            Console.WriteLine("Main Menu");
-            Console.WriteLine("Go Back");
+            Console.WriteLine("[Main] Menu");
+            Console.WriteLine("Go [Back]");
         }
 
         private void PrintStockDetail()
@@ -78,7 +73,14 @@ namespace Chatbot.Services
                 _currentStockCode = _input;
             }
             Stock stock = stockService.GetExchangeStockByCode(_currentExchangeCode, _currentStockCode);
-            Console.WriteLine($"Stock Price of ${stock.StockName} is ${stock.Price}. Please select an option.");
+            if(stock != null) {
+                Console.WriteLine($"Stock Price of ${stock.StockName} is ${stock.Price}. Please select an option.");
+                _success = true;
+            } else
+            {
+                Console.WriteLine($"Stock code '{_currentStockCode}' under Exchange code '{_currentExchangeCode}' not found. Please try again.");
+                _success = false;
+            }
         }
 
         private void PrintTopStocks()
@@ -87,23 +89,33 @@ namespace Chatbot.Services
             {
                 _currentExchangeCode = _input;
             }
-            Console.WriteLine($"Plese Select a stock");
+            Console.WriteLine($"Plese Select a stock code to veiew price detail");
             StockExchange exchange = stockService.GetExchangeByCode(_currentExchangeCode);
-            foreach (var stock in exchange.TopStocks)
+            if(exchange != null) {
+                foreach (var stock in exchange.TopStocks)
+                {
+                    Console.WriteLine($"{stock.StockName} ({stock.Code})");
+                }
+                _success = true;
+            }
+            else
             {
-                Console.WriteLine($"{stock.StockName} ({stock.Code})");
+                Console.WriteLine($"Exchange code '{_currentExchangeCode}' Not found. Please try again.");
+                _success = false;
             }
         }
 
         private void PrintExchanges()
         {
-            Console.WriteLine("Please select a Stock Exchange.");
+            Console.WriteLine("Please select a Stock Exchange by code.");
 
             var data = stockService.GetExchanges();
 
             foreach (var exchange in data) {
-                Console.WriteLine(exchange.Code);
+                Console.WriteLine($"{exchange.Name} ({exchange.Code})");
             }
+
+            _success = true;
         }
     }
 

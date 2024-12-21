@@ -1,19 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
+﻿using Newtonsoft.Json;
 
 namespace Chatbot.Models
 {
     public class Stock
     {
-        [JsonPropertyName("code")]
+        [JsonProperty("code")]
         public required string Code { get; set; }
-        [JsonPropertyName("stockName")]
+        [JsonProperty("stockName")]
         public required string StockName { get; set; }
-        [JsonPropertyName("price")]
+        [JsonProperty("price")]
         public required decimal Price { get; set; }
     }
 }
