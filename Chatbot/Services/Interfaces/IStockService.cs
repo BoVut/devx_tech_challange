@@ -9,6 +9,8 @@ namespace Chatbot.Services.Interfaces
 {
     internal interface IStockService
     {
+        public Stock GetExchangeStockByCode(string exchangeCode, string stockCode);
         public StockExchange[] GetExchanges();
+        public StockExchange GetExchangeByCode(string code);
     }
 }
