@@ -34,11 +34,9 @@ namespace Chatbot.Services
                         PrintExchanges();
                         break;
                     case Menu.ExchangeList:
-                        _currentExchangeCode = _input?.ToLower() == "back"? _currentExchangeCode: _input.ToLower();
                         PrintTopStocks();
                         break;
                     case Menu.StockList:
-                        _currentStockCode = _input?.ToLower() == "back"? _currentStockCode: _input.ToLower();
                         PrintStockDetail();
                         PrintMenu();
                         break;
@@ -55,6 +53,12 @@ namespace Chatbot.Services
                     _currentMenu--;
                 } else if (_input == "main") { 
                     _currentMenu = Menu.Main;
+                } else if (_input == string.Empty)
+                {
+                }
+                else
+                {
+                    _currentMenu++;
                 }
             }
 
@@ -69,12 +73,20 @@ namespace Chatbot.Services
 
         private void PrintStockDetail()
         {
+            if(!string.IsNullOrWhiteSpace(_input) && _input != "back")
+            {
+                _currentStockCode = _input;
+            }
             Stock stock = stockService.GetExchangeStockByCode(_currentExchangeCode, _currentStockCode);
             Console.WriteLine($"Stock Price of ${stock.StockName} is ${stock.Price}. Please select an option.");
         }
 
         private void PrintTopStocks()
         {
+            if(!string.IsNullOrWhiteSpace(_input) && _input != "back")
+            {
+                _currentExchangeCode = _input;
+            }
             Console.WriteLine($"Plese Select a stock");
             StockExchange exchange = stockService.GetExchangeByCode(_currentExchangeCode);
             foreach (var stock in exchange.TopStocks)
