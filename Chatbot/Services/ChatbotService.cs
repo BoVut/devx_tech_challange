@@ -15,8 +15,7 @@ namespace Chatbot.Services
         private enum Menu {
             Main,
             ExchangeList,
-            StockList,
-            StockDetail
+            StockList
         }
 
         private bool _success = false;
@@ -29,7 +28,6 @@ namespace Chatbot.Services
 
             while (!string.Equals(_input, "exit", StringComparison.OrdinalIgnoreCase)) {
 
-                
                 switch (_currentMenu)
                 {
                     case Menu.Main:
@@ -48,12 +46,17 @@ namespace Chatbot.Services
 
                 _input = Console.ReadLine()?.ToLower();
 
-                if(_input == "back" && _currentMenu > 0) {
-                    _currentMenu--;
+
+                if(_input == "back")  {
+                    if ((int)_currentMenu > (int)Menu.Main) {
+                        _currentMenu--;
+                    }
                 } else if (_input == "main") { 
                     _currentMenu = Menu.Main;
                 } else if (_success) {
-                    _currentMenu++;
+                    if ((int)_currentMenu < (int)Menu.StockList){
+                        _currentMenu++;
+                    }
                 }
             }
 
@@ -64,6 +67,7 @@ namespace Chatbot.Services
         {
             Console.WriteLine("[Main] Menu");
             Console.WriteLine("Go [Back]");
+            Console.WriteLine("[Exit] Chat");
         }
 
         private void PrintStockDetail()
